@@ -1,6 +1,7 @@
 package builders.queryBuilders
 
 import builders.{PaginationValue, QueryBuilder}
+import com.typesafe.scalalogging.LazyLogging
 
 /**
  * Query builder for building sub-fields for a repository topic. Possible subfields and
@@ -12,7 +13,8 @@ import builders.{PaginationValue, QueryBuilder}
  */
 case class RepositoryTopicQueryBuilder(scalars: List[String] = List(),
                                        fields: List[QueryBuilder] = List(),
-                                       connections: List[QueryBuilder] = List()) extends QueryBuilder {
+                                       connections: List[QueryBuilder] = List())
+  extends QueryBuilder with LazyLogging {
 
   // overridden top query
   override var topQuery: String = "repositoryTopic"
@@ -36,6 +38,7 @@ case class RepositoryTopicQueryBuilder(scalars: List[String] = List(),
    * @return object of type [[RepositoryTopicQueryBuilder]]
    */
   def includeTopic(topicQueryBuilder: TopicQueryBuilder): RepositoryTopicQueryBuilder = {
+    logger.info("Including topic field")
     val repositoryTopicQueryBuilder: RepositoryTopicQueryBuilder = new RepositoryTopicQueryBuilder(
       this.scalars,
       topicQueryBuilder :: this.fields,

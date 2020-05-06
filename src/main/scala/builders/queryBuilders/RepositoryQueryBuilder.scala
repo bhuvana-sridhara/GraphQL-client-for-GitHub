@@ -1,6 +1,7 @@
 package builders.queryBuilders
 
 import builders.{PaginationValue, QueryBuilder}
+import com.typesafe.scalalogging.LazyLogging
 
 /**
  * Query builder for building sub-fields for a repository. Possible subfields and
@@ -12,7 +13,8 @@ import builders.{PaginationValue, QueryBuilder}
  */
 case class RepositoryQueryBuilder(scalars: List[String] = List(),
                                   fields: List[QueryBuilder] = List(),
-                                  connections: List[QueryBuilder] = List()) extends QueryBuilder {
+                                  connections: List[QueryBuilder] = List())
+  extends QueryBuilder with LazyLogging {
 
   // overridden top query
   override var topQuery: String = "repository"
@@ -34,6 +36,7 @@ case class RepositoryQueryBuilder(scalars: List[String] = List(),
    * @return object of type [[RepositoryQueryBuilder]]
    */
   def includeName(): RepositoryQueryBuilder = {
+    logger.info("Including name")
     val repositoryQueryBuilder: RepositoryQueryBuilder = new RepositoryQueryBuilder(
       "name" :: this.scalars,
       this.fields,
@@ -48,6 +51,7 @@ case class RepositoryQueryBuilder(scalars: List[String] = List(),
    * @return object of type [[RepositoryQueryBuilder]]
    */
   def includeUrl(): RepositoryQueryBuilder = {
+    logger.info("Including url")
     val repositoryQueryBuilder: RepositoryQueryBuilder = new RepositoryQueryBuilder(
       "url" :: this.scalars,
       this.fields,
@@ -62,6 +66,7 @@ case class RepositoryQueryBuilder(scalars: List[String] = List(),
    * @return object of type [[RepositoryQueryBuilder]]
    */
   def includeDateTime(): RepositoryQueryBuilder = {
+    logger.info("Including createdAt")
     val repositoryQueryBuilder: RepositoryQueryBuilder = new RepositoryQueryBuilder(
       "createdAt" :: this.scalars,
       this.fields,
@@ -76,6 +81,7 @@ case class RepositoryQueryBuilder(scalars: List[String] = List(),
    * @return object of type [[RepositoryQueryBuilder]]
    */
   def includeIsFork(): RepositoryQueryBuilder = {
+    logger.info("Including isFork")
     val repositoryQueryBuilder: RepositoryQueryBuilder = new RepositoryQueryBuilder(
       "isFork" :: this.scalars,
       this.fields,
@@ -93,6 +99,7 @@ case class RepositoryQueryBuilder(scalars: List[String] = List(),
    * @return object of type [[RepositoryQueryBuilder]]
    */
   def includeOwner(repositoryOwnerQueryBuilder: RepositoryOwnerQueryBuilder): RepositoryQueryBuilder = {
+    logger.info("Including owner field")
     val repositoryQueryBuilder: RepositoryQueryBuilder = new RepositoryQueryBuilder(
       this.scalars,
       repositoryOwnerQueryBuilder :: this.fields,
@@ -114,6 +121,7 @@ case class RepositoryQueryBuilder(scalars: List[String] = List(),
                     forkQueryBuilder: RepositoryQueryBuilder,
                     numberOfResults: PaginationValue
                   ): RepositoryQueryBuilder = {
+    logger.info("Including forks connection")
     forkQueryBuilder.topQuery = "forks" + s"(${numberOfResults.argument})"
     val repositoryQueryBuilder: RepositoryQueryBuilder = new RepositoryQueryBuilder(
       this.scalars,
@@ -136,6 +144,7 @@ case class RepositoryQueryBuilder(scalars: List[String] = List(),
                      issueQueryBuilder: IssueQueryBuilder,
                      numberOfResults: PaginationValue
                    ): RepositoryQueryBuilder = {
+    logger.info("Including issues connection")
     issueQueryBuilder.topQuery = "issues" + s"(${numberOfResults.argument})"
     val repositoryQueryBuilder: RepositoryQueryBuilder = new RepositoryQueryBuilder(
       this.scalars,
@@ -158,6 +167,7 @@ case class RepositoryQueryBuilder(scalars: List[String] = List(),
                         languageQueryBuilder: LanguageQueryBuilder,
                         numberOfResults: PaginationValue
                       ): RepositoryQueryBuilder = {
+    logger.info("Including languages connection")
     languageQueryBuilder.topQuery = "languages" + s"(${numberOfResults.argument})"
     val repositoryQueryBuilder: RepositoryQueryBuilder = new RepositoryQueryBuilder(
       this.scalars,
@@ -181,6 +191,7 @@ case class RepositoryQueryBuilder(scalars: List[String] = List(),
                                topicQueryBuilder: RepositoryTopicQueryBuilder,
                                numberOfResults: PaginationValue
                              ): RepositoryQueryBuilder = {
+    logger.info("Including repository topics connection")
     topicQueryBuilder.topQuery = "repositoryTopics" + s"(${numberOfResults.argument})"
     val repositoryQueryBuilder: RepositoryQueryBuilder = new RepositoryQueryBuilder(
       this.scalars,

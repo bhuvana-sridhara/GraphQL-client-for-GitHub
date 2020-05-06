@@ -1,6 +1,7 @@
 package builders.queryBuilders
 
 import builders.QueryBuilder
+import com.typesafe.scalalogging.LazyLogging
 
 /**
  * Query builder for building sub-fields for an issue. Possible subfields and
@@ -12,7 +13,8 @@ import builders.QueryBuilder
  */
 case class IssueQueryBuilder(scalars: List[String] = List(),
                         fields: List[QueryBuilder] = List(),
-                        connections: List[QueryBuilder] = List()) extends QueryBuilder {
+                        connections: List[QueryBuilder] = List())
+  extends QueryBuilder with LazyLogging {
 
   // overridden top query
   override var topQuery: String = "issue"
@@ -36,6 +38,7 @@ case class IssueQueryBuilder(scalars: List[String] = List(),
    * @return object of type [[IssueQueryBuilder]]
    */
   def includeAuthor(authorQueryBuilder: RepositoryOwnerQueryBuilder): IssueQueryBuilder = {
+    logger.info("Including author field")
     authorQueryBuilder.topQuery = "author"
     val issueQueryBuilder: IssueQueryBuilder = new IssueQueryBuilder(
       this.scalars,
@@ -51,6 +54,7 @@ case class IssueQueryBuilder(scalars: List[String] = List(),
    * @return object of type [[IssueQueryBuilder]]
    */
   def includeIsClosed(): IssueQueryBuilder = {
+    logger.info("Including closed")
     val issueQueryBuilder: IssueQueryBuilder = new IssueQueryBuilder(
       "closed" :: this.scalars,
       this.fields,
@@ -67,6 +71,7 @@ case class IssueQueryBuilder(scalars: List[String] = List(),
    * @return object of type [[IssueQueryBuilder]]
    */
   def includeRepository(repositoryQueryBuilder: RepositoryQueryBuilder): IssueQueryBuilder = {
+    logger.info("Including repository field")
     val issueQueryBuilder: IssueQueryBuilder = new IssueQueryBuilder(
       this.scalars,
       repositoryQueryBuilder :: this.fields,
@@ -81,6 +86,7 @@ case class IssueQueryBuilder(scalars: List[String] = List(),
    * @return object of type [[IssueQueryBuilder]]
    */
   def includeTitle(): IssueQueryBuilder = {
+    logger.info("Including title")
     val issueQueryBuilder: IssueQueryBuilder = new IssueQueryBuilder(
       "title" :: this.scalars,
       this.fields,
@@ -95,6 +101,7 @@ case class IssueQueryBuilder(scalars: List[String] = List(),
    * @return object of type [[IssueQueryBuilder]]
    */
   def includeUrl(): IssueQueryBuilder = {
+    logger.info("Including url")
     val issueQueryBuilder: IssueQueryBuilder = new IssueQueryBuilder(
       "url" :: this.scalars,
       this.fields,

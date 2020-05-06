@@ -1,6 +1,7 @@
 package builders.queryBuilders
 
 import builders.QueryBuilder
+import com.typesafe.scalalogging.LazyLogging
 
 /**
  * Query builder for building sub-fields for a language. Possible subfields and
@@ -12,7 +13,8 @@ import builders.QueryBuilder
  */
 case class LanguageQueryBuilder(scalars: List[String] = List(),
                              fields: List[QueryBuilder] = List(),
-                             connections: List[QueryBuilder] = List()) extends QueryBuilder {
+                             connections: List[QueryBuilder] = List())
+  extends QueryBuilder with LazyLogging {
 
   // overridden top query
   override var topQuery: String = "language"
@@ -34,6 +36,7 @@ case class LanguageQueryBuilder(scalars: List[String] = List(),
    * @return object of type [[LanguageQueryBuilder]]
    */
   def includeName(): LanguageQueryBuilder = {
+    logger.info("Including name")
     val languageQueryBuilder: LanguageQueryBuilder = new LanguageQueryBuilder(
       "name" :: this.scalars,
       this.fields,
@@ -48,6 +51,7 @@ case class LanguageQueryBuilder(scalars: List[String] = List(),
    * @return object of type [[LanguageQueryBuilder]]
    */
   def includeColor(): LanguageQueryBuilder = {
+    logger.info("Including color")
     val languageQueryBuilder: LanguageQueryBuilder = new LanguageQueryBuilder(
       "color" :: this.scalars,
       this.fields,

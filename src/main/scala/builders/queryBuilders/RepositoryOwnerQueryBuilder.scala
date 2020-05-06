@@ -1,6 +1,7 @@
 package builders.queryBuilders
 
 import builders.QueryBuilder
+import com.typesafe.scalalogging.LazyLogging
 
 /**
  * Query builder for building sub-fields for a repository owner. Possible subfields and
@@ -12,7 +13,8 @@ import builders.QueryBuilder
  */
 case class RepositoryOwnerQueryBuilder(scalars: List[String] = List(),
                                        fields: List[QueryBuilder] = List(),
-                                       connections: List[QueryBuilder] = List()) extends QueryBuilder {
+                                       connections: List[QueryBuilder] = List())
+  extends QueryBuilder with LazyLogging {
 
   // overridden top query
   override var topQuery: String = "owner"
@@ -34,6 +36,7 @@ case class RepositoryOwnerQueryBuilder(scalars: List[String] = List(),
    * @return object of type [[RepositoryOwnerQueryBuilder]]
    */
   def includeLogin(): RepositoryOwnerQueryBuilder = {
+    logger.info("Including login")
     val repositoryOwnerQueryBuilder: RepositoryOwnerQueryBuilder = new RepositoryOwnerQueryBuilder(
       "login" :: this.scalars,
       this.fields,
@@ -48,6 +51,7 @@ case class RepositoryOwnerQueryBuilder(scalars: List[String] = List(),
    * @return object of type [[RepositoryOwnerQueryBuilder]]
    */
   def includeUrl(): RepositoryOwnerQueryBuilder = {
+    logger.info("Including url")
     val repositoryOwnerQueryBuilder: RepositoryOwnerQueryBuilder = new RepositoryOwnerQueryBuilder(
       "url" :: this.scalars,
       this.fields,

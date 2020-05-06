@@ -1,6 +1,7 @@
 package builders.queryBuilders
 
 import builders.{PaginationValue, QueryBuilder}
+import com.typesafe.scalalogging.LazyLogging
 
 /**
  * Query builder for building sub-fields for a user. Possible subfields and
@@ -12,7 +13,8 @@ import builders.{PaginationValue, QueryBuilder}
  */
 case class UserQueryBuilder(scalars: List[String] = List(),
                         fields: List[QueryBuilder] = List(),
-                        connections: List[QueryBuilder] = List()) extends QueryBuilder {
+                        connections: List[QueryBuilder] = List())
+  extends QueryBuilder with LazyLogging {
 
   // overridden top query
   override var topQuery: String = "user"
@@ -34,6 +36,7 @@ case class UserQueryBuilder(scalars: List[String] = List(),
    * @return object of type [[RepositoryQueryBuilder]]
    */
   def includeCompany(): UserQueryBuilder = {
+    logger.info("Including company")
     val userQueryBuilder: UserQueryBuilder = new UserQueryBuilder(
       "company" :: this.scalars,
       this.fields,
@@ -48,6 +51,7 @@ case class UserQueryBuilder(scalars: List[String] = List(),
    * @return object of type [[RepositoryQueryBuilder]]
    */
   def includeCreatedAt(): UserQueryBuilder = {
+    logger.info("Including createdAt")
     val userQueryBuilder: UserQueryBuilder = new UserQueryBuilder(
       "createdAt" :: this.scalars,
       this.fields,
@@ -62,6 +66,7 @@ case class UserQueryBuilder(scalars: List[String] = List(),
    * @return object of type [[RepositoryQueryBuilder]]
    */
   def includeEmail(): UserQueryBuilder = {
+    logger.info("Including email")
     val userQueryBuilder: UserQueryBuilder = new UserQueryBuilder(
       "email" :: this.scalars,
       this.fields,
@@ -76,6 +81,7 @@ case class UserQueryBuilder(scalars: List[String] = List(),
    * @return object of type [[RepositoryQueryBuilder]]
    */
   def includeLogin(): UserQueryBuilder = {
+    logger.info("Including login")
     val userQueryBuilder: UserQueryBuilder = new UserQueryBuilder(
       "login" :: this.scalars,
       this.fields,
@@ -90,6 +96,7 @@ case class UserQueryBuilder(scalars: List[String] = List(),
    * @return object of type [[RepositoryQueryBuilder]]
    */
   def includeName(): UserQueryBuilder = {
+    logger.info("Including name")
     val userQueryBuilder: UserQueryBuilder = new UserQueryBuilder(
       "name" :: this.scalars,
       this.fields,
@@ -104,6 +111,7 @@ case class UserQueryBuilder(scalars: List[String] = List(),
    * @return object of type [[RepositoryQueryBuilder]]
    */
   def includeUrl(): UserQueryBuilder = {
+    logger.info("Including url")
     val userQueryBuilder: UserQueryBuilder = new UserQueryBuilder(
       "url" :: this.scalars,
       this.fields,
@@ -125,6 +133,7 @@ case class UserQueryBuilder(scalars: List[String] = List(),
                         followingQueryBuilder: UserQueryBuilder,
                         numberOfResults: PaginationValue
                       ): UserQueryBuilder = {
+    logger.info("Including following connection")
     followingQueryBuilder.topQuery = "following" + s"(${numberOfResults.argument})"
     val userQueryBuilder: UserQueryBuilder = new UserQueryBuilder(
       this.scalars,
@@ -135,7 +144,7 @@ case class UserQueryBuilder(scalars: List[String] = List(),
   }
 
   /**
-   * Includes the '''following''' connection in the user query
+   * Includes the '''followers''' connection in the user query
    *
    * @param followersQueryBuilder object of type [[UserQueryBuilder]] that is used
    *                              to specify the sub-fields of followers
@@ -147,6 +156,7 @@ case class UserQueryBuilder(scalars: List[String] = List(),
                         followersQueryBuilder: UserQueryBuilder,
                         numberOfResults: PaginationValue
                       ): UserQueryBuilder = {
+    logger.info("Including followers connection")
     followersQueryBuilder.topQuery = "followers" + s"(${numberOfResults.argument})"
     val userQueryBuilder: UserQueryBuilder = new UserQueryBuilder(
       this.scalars,
@@ -169,6 +179,7 @@ case class UserQueryBuilder(scalars: List[String] = List(),
                            repositoryQueryBuilder: RepositoryQueryBuilder,
                            numberOfResults: PaginationValue
                          ): UserQueryBuilder = {
+    logger.info("Including repositories connection")
     repositoryQueryBuilder.topQuery = "repositories" + s"(${numberOfResults.argument})"
     val userQueryBuilder: UserQueryBuilder = new UserQueryBuilder(
       this.scalars,

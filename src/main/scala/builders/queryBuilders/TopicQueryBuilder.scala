@@ -1,6 +1,7 @@
 package builders.queryBuilders
 
 import builders.{PaginationValue, QueryBuilder}
+import com.typesafe.scalalogging.LazyLogging
 
 /**
  * Query builder for building sub-fields for a topic. Possible subfields and
@@ -12,7 +13,8 @@ import builders.{PaginationValue, QueryBuilder}
  */
 case class TopicQueryBuilder(scalars: List[String] = List(),
                              fields: List[QueryBuilder] = List(),
-                             connections: List[QueryBuilder] = List()) extends QueryBuilder {
+                             connections: List[QueryBuilder] = List())
+  extends QueryBuilder with LazyLogging {
 
   // overridden top query
   override var topQuery: String = "topic"
@@ -34,6 +36,7 @@ case class TopicQueryBuilder(scalars: List[String] = List(),
    * @return object of type [[TopicQueryBuilder]]
    */
   def includeName(): TopicQueryBuilder = {
+    logger.info("Including name")
     val topicQueryBuilder: TopicQueryBuilder = new TopicQueryBuilder(
       "name" :: this.scalars,
       this.fields,
@@ -55,6 +58,7 @@ case class TopicQueryBuilder(scalars: List[String] = List(),
                          stargazerQueryBuilder: UserQueryBuilder,
                          numberOfResults: PaginationValue
                        ): TopicQueryBuilder = {
+    logger.info("Including stargazers connection")
     stargazerQueryBuilder.topQuery = "stargazers" + s"(${numberOfResults.argument})"
     val topicQueryBuilder: TopicQueryBuilder = new TopicQueryBuilder(
       this.scalars,
