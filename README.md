@@ -1,7 +1,9 @@
 # Scala Client for GitHub GraphQL
 
 Harish Venkataraman (hvenka8@uic.edu)
+
 Karan Davanam (kdavan2@uic.edu)
+
 Bhuvana Sridhara (bsridh5@uic.edu)
 
 ***
@@ -21,6 +23,7 @@ Bhuvana Sridhara (bsridh5@uic.edu)
 	* [Scala Models](#markdown-header-scala-models)
 * [Usage](#markdown-header-usage)
 * [Class reference](#markdown-header-class-reference)
+* [Areas of improvement](#markdown-header-areas-of-improvement)
 
 ### Requirements
 * [Intellij](https://www.jetbrains.com/idea/)
@@ -42,7 +45,7 @@ The framework is a GraphQL client for the [GitHub API](https://developer.github.
 
 It mainly consists of three components - 
 
-![main-components](readme-resources/main-components.png)
+[![alt-text](readme-resources/main-components.png)](readme-resources/main-components.png)
 
 As an overview, the __query builder__ component contains classes and functions used to compose queries in the format required by the GitHub API. The __HTTP client__ makes a connection with API server and sends the composed query. The response is then unmarshalled and stored in custom __Scala models__, which are just instances of Scala classes that represent the GraphQL objects. 
 
