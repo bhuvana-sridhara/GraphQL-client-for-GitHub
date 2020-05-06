@@ -287,7 +287,7 @@ List(handwriting-detector-app, AI-algorithms, ML4K-AI-Extension, MLmobileapps, E
 To extract the ```endCursor``` from the returned result and pass it to the same query, we can take advantage of the ```copy()``` method of Scala case classes - 
 
 ```scala
-val endCursor: String = results.map(_.getPageInfo.getEndCursor)
+val endCursor: String = results.map(_.getPageInfo.getEndCursor).getOrElse("None")
 val newSearchQueryBuilder: SearchQueryBuilder = searchQueryBuilder.copy(after=endCursor)
 val query:Query = new Query().searchRepositories(newSearchQueryBuilder)
 ``` 
