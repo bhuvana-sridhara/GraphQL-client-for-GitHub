@@ -2,15 +2,19 @@ import builders.queryBuilders.RepositoryQueryBuilder
 import builders.{First, GreaterThan, LesserThanEqualTo, Query, SearchQueryBuilder}
 import client.HttpClientBuilder.HttpComponents.HttpEmpty
 import client.{HttpClient, HttpClientBuilder}
+import com.typesafe.config.Config
 import models.objects.{Repository, Search}
 import org.scalatest.funsuite.AnyFunSuite
+import utils.ConfigReader.getConfigDetails
 
 class SearchQueryTest extends AnyFunSuite{
+
+  val config:Config = getConfigDetails("application.conf")
 
   test("Successful"){
     //Build a HTTP client
     val httpObject:Option[HttpClient] = new HttpClientBuilder[HttpEmpty]()
-      .addBearerToken("173f9a32dfa62e35664a4f662e519c78f4101295")
+      .addBearerToken(config.getString("ACCESS_TOKEN"))
       .build
 
     //Build query
@@ -37,7 +41,7 @@ class SearchQueryTest extends AnyFunSuite{
   test("Type error- Please provide Search Type for Casting since the query created is of type Search"){
     //Build a HTTP client
     val httpObject:Option[HttpClient] = new HttpClientBuilder[HttpEmpty]()
-      .addBearerToken("173f9a32dfa62e35664a4f662e519c78f4101295")
+      .addBearerToken(config.getString("ACCESS_TOKEN"))
       .build
 
     //Build query

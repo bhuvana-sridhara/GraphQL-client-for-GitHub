@@ -1,12 +1,16 @@
 import client.{HttpClient, HttpClientBuilder}
 import client.HttpClientBuilder.HttpComponents.HttpEmpty
+import com.typesafe.config.Config
+import utils.ConfigReader.getConfigDetails
 import org.scalatest.funsuite.AnyFunSuite
 
 class HttpClientBuilderTest extends AnyFunSuite {
 
+  val config:Config = getConfigDetails("application.conf")
+
   test("Successful HTTP connection- valid token"){
 
-    val httpObject:Option[HttpClient] = new HttpClientBuilder[HttpEmpty]().addBearerToken("173f9a32dfa62e35664a4f662e519c78f4101295").build
+    val httpObject:Option[HttpClient] = new HttpClientBuilder[HttpEmpty]().addBearerToken(config.getString("ACCESS_TOKEN")).build
 
     assert(httpObject.nonEmpty)
 
@@ -17,7 +21,7 @@ class HttpClientBuilderTest extends AnyFunSuite {
     assert(httpObject.get.headerPart("Accept") == "application/json")
 
     assert(httpObject.get.headerPart.contains("Authorization"))
-    assert(httpObject.get.headerPart("Authorization") == "Bearer 173f9a32dfa62e35664a4f662e519c78f4101295")
+    assert(httpObject.get.headerPart("Authorization") == "Bearer "+config.getString("ACCESS_TOKEN"))
 
   }
 
