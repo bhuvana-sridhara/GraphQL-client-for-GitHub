@@ -38,6 +38,7 @@ Run the following from the command line -
 * You can chain the tasks using ```sbt clean compile test```
 * To use the framework developed in this project, you can clone the repository and open the project in Intellij and run the commands from a main function using ```sbt run```. You can also run the code by opening the sbt shell in Intellij and typing ```run```
 * The access token to access the API needs to be given in the ```application.conf``` file which is read in the application through [_Typesafe_](https://github.com/lightbend/config)
+* To generate the Scaladoc, run ```sbt doc```
 
 ### Description
 
@@ -143,7 +144,7 @@ Naturally, the query builders can only query the information that is supported i
 
 ### Usage
 
-We first read from ```application.conf``` - 
+We first need to set the access token in ```src/main/resources/application.conf```. We then read from ```application.conf``` - 
 
 ```scala
 val config:Config = getConfigDetails("application.conf")
