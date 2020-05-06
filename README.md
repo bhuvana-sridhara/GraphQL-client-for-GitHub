@@ -288,12 +288,12 @@ List(handwriting-detector-app, AI-algorithms, ML4K-AI-Extension, MLmobileapps, E
 
 The generated Scaladoc can be used as API documentation for instructions on how to build different kinds of queries. We have implemented seven query builders to query seven different kinds of GraphQL objects under the ```findRepository()``` function. The below are the links to the specific classes.
 
-* [```RepositoryQueryBuilder```](src/main/scala/queryBuilders/RepositoryQueryBuilder.scala)
-* [```UserQueryBuilder```](src/main/scala/queryBuilders/UserQueryBuilder.scala)
-* [```IssueQueryBuilder```](src/main/scala/queryBuilders/IssueQueryBuilder.scala)
-* [```LanguageQueryBuilder```](src/main/scala/queryBuilders/LanguageQueryBuilder.scala)
-* [```RepositoryTopicQueryBuilder```](src/main/scala/queryBuilders/RepositoryTopicQueryBuilder.scala)
-* [```TopicQueryBuilder```](src/main/scala/queryBuilders/TopicQueryBuilder.scala)
-* [```RepositoryOwnerQueryBuilder```](src/main/scala/queryBuilders/RepositoryOwnerQueryBuilder.scala)
+* [```RepositoryQueryBuilder```](src/main/scala/builders/queryBuilders/RepositoryQueryBuilder.scala)
+* [```UserQueryBuilder```](src/main/scala/builders/queryBuilders/UserQueryBuilder.scala)
+* [```IssueQueryBuilder```](src/main/scala/builders/queryBuilders/IssueQueryBuilder.scala)
+* [```LanguageQueryBuilder```](src/main/scala/builders/queryBuilders/LanguageQueryBuilder.scala)
+* [```RepositoryTopicQueryBuilder```](src/main/scala/builders/queryBuilders/RepositoryTopicQueryBuilder.scala)
+* [```TopicQueryBuilder```](src/main/scala/builders/queryBuilders/TopicQueryBuilder.scala)
+* [```RepositoryOwnerQueryBuilder```](src/main/scala/builders/queryBuilders/RepositoryOwnerQueryBuilder.scala)
 
-For searching across all the repositories, the [```SearchQueryBuilder```](src/main/scala/SearchQueryBuilder.scala) has been provided.
+For searching across all the repositories, the [```SearchQueryBuilder```](src/main/scala/builders/SearchQueryBuilder.scala) has been provided.
