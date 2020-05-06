@@ -27,7 +27,7 @@ case class Query(queryString: String = "") {
    *
    * @param name name of the repository to search for
    * @param owner owner of the repository to search for
-   * @param repositoryQueryBuilder [[RepositoryQueryBuilder]] object that contains
+   * @param repositoryQueryBuilder [[queryBuilders.RepositoryQueryBuilder]] object that contains
    *                              functions to specify the sub-fields of the query
    * @return object of type [[Query]]
    */

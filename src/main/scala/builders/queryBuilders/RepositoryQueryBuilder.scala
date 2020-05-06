@@ -23,7 +23,7 @@ case class RepositoryQueryBuilder(scalars: List[String] = List(),
    * @param queryBuilder object of type [[RepositoryQueryBuilder]]
    * @return object of type [[RepositoryQueryBuilder]]
    */
-  def modifyTopQuery(queryBuilder: RepositoryQueryBuilder): RepositoryQueryBuilder = {
+  private def modifyTopQuery(queryBuilder: RepositoryQueryBuilder): RepositoryQueryBuilder = {
     queryBuilder.topQuery = this.topQuery
     queryBuilder
   }

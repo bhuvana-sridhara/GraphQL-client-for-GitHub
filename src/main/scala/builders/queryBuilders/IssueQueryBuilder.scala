@@ -23,7 +23,7 @@ case class IssueQueryBuilder(scalars: List[String] = List(),
    * @param queryBuilder object of type [[IssueQueryBuilder]]
    * @return object of type [[IssueQueryBuilder]]
    */
-  def modifyTopQuery(queryBuilder: IssueQueryBuilder): IssueQueryBuilder = {
+  private def modifyTopQuery(queryBuilder: IssueQueryBuilder): IssueQueryBuilder = {
     queryBuilder.topQuery = this.topQuery
     queryBuilder
   }

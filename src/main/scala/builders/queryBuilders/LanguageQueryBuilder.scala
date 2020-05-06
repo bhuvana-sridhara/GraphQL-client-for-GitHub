@@ -23,7 +23,7 @@ case class LanguageQueryBuilder(scalars: List[String] = List(),
    * @param queryBuilder object of type [[LanguageQueryBuilder]]
    * @return object of type [[LanguageQueryBuilder]]
    */
-  def modifyTopQuery(queryBuilder: LanguageQueryBuilder): LanguageQueryBuilder = {
+  private def modifyTopQuery(queryBuilder: LanguageQueryBuilder): LanguageQueryBuilder = {
     queryBuilder.topQuery = this.topQuery
     queryBuilder
   }

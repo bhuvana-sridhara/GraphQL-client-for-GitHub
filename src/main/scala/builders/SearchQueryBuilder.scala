@@ -261,7 +261,7 @@ case class SearchQueryBuilder(
    * Deals with the body of the search query for repositories.
    * Constructs the sub-fields of the repository
    *
-   * @param repositoryQueryBuilder type [[RepositoryQueryBuilder]] which has functions to
+   * @param repositoryQueryBuilder type [[queryBuilders.RepositoryQueryBuilder]] which has functions to
    *                               specify the subfields of the repository query
    * @return object of type [[SearchQueryBuilder]]
    */

@@ -1,119 +1,299 @@
-# Course Project
-### Description: object-oriented pure functional design and implementation of a [GraphQL](https://graphql.org) client framework for [Github](https://github.com/) as an I/O monad.
-### Grade: 25% with some small bonus - read below.
-#### You can obtain this Git repo using the command git clone git@bitbucket.org:cs474_spring2020/courseproject.git.
+# Scala Client for GitHub GraphQL
 
-## Preliminaries
-As part of the previous homework assignments you gained experience with creating and managing your Git repositories, you have learned many design patterns, you created your model and the object-oriented design of a design pattern code generator, you learned to create JUnit or Cucumber or FlatSpec tests, you created your SBT or Gradle build scripts, and you completed your first IntelliJ plugin that generated and manipulated the source code of the loaded  Intellij projects. Congratulations!
+Harish Venkataraman (hvenka8@uic.edu)
+Karan Davanam (kdavan2@uic.edu)
+Bhuvana Sridhara (bsridh5@uic.edu)
 
-If you have done your homeworks, you can skip the rest of the prelimininaries. Your instructor created a team for this class named CS474_Spring2020. Please contact your TA, [Mr. Mohammed Siddiq](msiddi56@uic.edu) using your UIC.EDU email account and he will add you to the team repo as developers, since Mr.Siddiq already has the admin privileges. Please use your emails from the class registration roster to add you to the team and you will receive an invitation from BitBucket to join the team. Since it is a large class, please use your UIC email address for communications or Piazza and avoid emails from other accounts like funnybunny1998@gmail.com. If you don't receive a response within 24 hours, please contact us via Piazza, since it may be a case that your direct emails went to the spam folder.
+***
 
-If you haven't already done so, please create create your account at [BitBucket](https://bitbucket.org/), a Git repo management system. It is imperative that you use your UIC email account that has the extension @uic.edu. Once you create an account with your UIC address, BibBucket will assign you an academic status that allows you to create private repos. Bitbucket users with free accounts cannot create private repos, which are essential for submitting your homeworks and the course project. If you have a problem with obtaining the academic account with your UIC.EDU email address, please contact Atlassian's license and billing team and ask them to enable your academic account by filling out the [Atlassian Bitbucket academic account request form](https://www.atlassian.com/software/views/bitbucket-academic-license).
+### Contents
 
-Next, if you haven't done so, you will install [IntelliJ](https://www.jetbrains.com/student/) with your academic license, the JDK, the Scala runtime and the IntelliJ Scala plugin, the [Simple Build Toolkit (SBT)](https://www.scala-sbt.org/1.x/docs/index.html) or the [Gradle build tool](https://gradle.org/) and make sure that you can create, compile, and run Java and Scala programs. Please make sure that you can run [various Java tools from your chosen JDK](https://docs.oracle.com/en/java/javase/index.html).
+* [Requirements](#markdown-header-requirements)
+* [Building the code](#markdown-header-building-the-code) 
+* [Description](#markdown-header-description)
+* [Components](#markdown-header-components)
+	* [Query Builder](#markdown-header-query-builder)
+		* [Pagination Value](#markdown-header-pagination-value)
+		* [Operation](#markdown-header-operation)
+	* [HTTP Client](#markdown-header-http-client)
+		* [Serializer](#markdown-header-serializer)
+		* [Deserializer](#markdown-header-deserializer)
+	* [Scala Models](#markdown-header-scala-models)
+* [Results](#markdown-header-results)
+* [Class reference](#markdown-header-class-reference)
 
-Just to remind you, in this like all other homeworks and in the course project you will use logging and configuration management frameworks. You will comment your code extensively and supply logging statements at different logging levels (e.g., TRACE, INFO, ERROR) to record information at some salient points in the executions of your programs. All input and configuration variables must be supplied through configuration files -- hardcoding these values in the source code is generally prohibited and will be punished by taking a large percentage of points from your total grade! You are expected to use [Logback](https://logback.qos.ch/) and [SLFL4J](https://www.slf4j.org/) for logging and [Typesafe Conguration Library](https://github.com/lightbend/config) for managing configuration files. These and other libraries should be imported into your project using your script [build.sbt](https://www.scala-sbt.org/1.0/docs/Basic-Def-Examples.html) or [gradle script](https://docs.gradle.org/current/userguide/writing_build_scripts.html). These libraries and frameworks are widely used in the industry, so learning them is the time well spent to improve your resumes.
+### Requirements
+* [Intellij](https://www.jetbrains.com/idea/)
+* [SBT](https://www.scala-sbt.org/)
 
-## WARNING 
-There are a few implementations of the OO functional GraphQL frameworks on the Internet. I know about many of them. You can study these implementations and feel free to use the ideas in your own implementation, and you must acknowledge what you use in your README. However, blindly copying large parts of some existing implementation in your code will result in receiving the grade F for the entire course with the transfer of your case of plagiarism to the Dean of Students Office, which will be followed with severe penalties. Most likely, you will be suspended or complete dismissed from the program in the worst case. Please do not plagiarize existing implementations, it is not worth it! However, if you find some functions of classes that you can reuse in your project, please feel free to do so as long as it does not constitute a major part of your project submission and you acknowledge the reuse in your project documentation.
+### Building the code
+Run the following from the command line - 
 
-## Introduction
-The goal of this project is to gain experience with pure functional object-oriented design of a practically useful and important framework for composing and executing external GraphQL commands from Scala client programs and obtaining and processing the results of these executions. This homework is based on the material from the textbook on Functional Programming in Scala by Paul Chiusano and R�nar Bjarnason and it is modeled on the pure functional design principles described in sections 6 and 7 of the textbook.
+* To test the code, run ```sbt test```
+* To compile the code, run ```sbt compile ```
+* To clean working directory, run ```sbt clean```
+* You can chain the tasks using ```sbt clean compile test```
+* To use the framework developed in this project, you can clone the repository and open the project in Intellij and run the commands from a main function using ```sbt run```. You can also run the code by opening the sbt shell in Intellij and typing ```run```
 
-In this homework, you will create an object-oriented design and implementation of a program that extracts and organizes git repositories data from [Github](https://github.com/). As the first step, you will create [your developer account at Github](https://developer.github.com/v4/) and you will obtain your authorization key. The [Github schema](https://developer.github.com/v4/public_schema/) is publicly available and you will study it to understand the organization of data items on Github and relationships among them. That is, for a given repo, you may obtain the information on all contributors, commits, URL for each commit, the changeset and many other metadata. For a given contributor, you may determine all projects that this contributor participated in and what type of code s/he committed. A part of this homework is that you come up with your own GraphQL queries that will slice and dice the Github schema and you will create a model and object-oriented design of your program based on your model.
+### Description
 
-This homework is based on GraphQL and it is a relatively new technology released by Facebook as an open-source software and it is already widely used. There are many resources on the Internet including its [official specification](https://graphql.github.io/graphql-spec/June2018/), [query tools](https://graphcms.com/blog/top-10-graphql-tools-for-2019/), and a [compendium of useful links](https://github.com/chentsulin/awesome-graphql#lib-java) in addition to youtube videos and various documents and examples on [Stackoverflow](https://stackoverflow.com/search?q=graphql). It is beneficial that you learn GraphQL as you go, since it is a simple declarative language that can be nicely intergrated into programs written in object-oriented languages.
+The framework is a GraphQL client for the [GitHub API](https://developer.github.com/v4/) written in Scala. It allows the user to compose queries to access different kinds of GraphQL objects, send the queries to the GitHub API, and unmarshall the JSON response into appropriate Scala classes for the developer to use in their Scala code. 
 
-This course project script is written using a retroscripting technique, in which the project outlines are generally and loosely drawn, and the individual students improvise to create the implementation that fits their refined objectives. In doing so, students are expected to stay within the basic requirements of the project and they are free to experiments. That is, it is impossible that two non-collaborating groups will submit similar project implementations! Asking questions is important, so please ask away at Piazza!
+It mainly consists of three components - 
 
-## Functionality
-Once you installed and configured your Github developer account, your job is to create various GraphQL queries to understand how the process works. Consider a snippet of the Scala code below that creates a basic HTTP client for Github GraphQL endpoint and serves a basic query and obtains the response. In it, a simple GraphQL query for Github is formed, a connection to the Github endpoint is created, the query is submitted and the response is obtained. Using JSON converters the response is converted into Scala classes. Of course, feel free to experiment and use third-party libraries for your client, but remember that your time is limited and you may not be able to explore the majority of the available tools on the Internet for GraphQL.
+![main-components](readme-resources/main-components.png)
+
+As an overview, the __query builder__ component contains classes and functions used to compose queries in the format required by the GitHub API. The __HTTP client__ makes a connection with API server and sends the composed query. The response is then unmarshalled and stored in custom __Scala models__, which are just instances of Scala classes that represent the GraphQL objects. 
+
+The framework makes use of the _abstract factory_ and _builder_ design patterns. The HTTP client in particular uses [_phantom types_](https://medium.com/@maximilianofelice/builder-pattern-in-scala-with-phantom-types-3e29a167e863) for compile-time checking.
+
+To jump straight to user instructions, click here!
+
+### Components
+
+The query syntax required by the GitHub API is extensively documented and requires queries in a JSON format. Each query starts with a ```query``` keyword followed by curly braces inside which body of the query is defined.  In our framework, we currently support two kinds of queries - 
+
+* __repository__ queries that look for a specific repository by name and owner
+* __search__ queries that search across all repositories on GitHub based on some selection criteria
+
+All queries are instantiated using a factory class called [```Query```](src/main/scala/builders/Query.scala) which contains two methods for each of the queries that the framework supports. Each method takes arguments specific to its functionality to compose a query from scratch. Each method also has one argument that is particularly used to compose the body of the query. For finding a single repository, we use the ```findRepository()``` function that takes the name and owner as required arguments along with a ```RepositoryQueryBuilder``` instance. For searching across all repositories, we use the ```searchRepositories()``` function that takes a single instance of  ```SearchQueryBuilder``` as an argument. These two methods return a new instance of ```Query``` which contains a string called ```queryString``` set to the composed query and another string called ```returnType``` set to a custom value that indicates the GraphQL object that the query is supposed to return.
+
+#### Query Builder
+
+All builder classes for query except [```SearchQueryBuilder```](src/main/scala/builders/SearchQueryBuilder.scala) extend the [```QueryBuilder```](src/main/scala/builders/QueryBuilder.scala) abstract class. Each query builder sub-class behaves as a builder class that assembles the query string from scratch based on the functions called from the builders. We ensure referential transparency by returning new copies of the builder instances everytime a function in the builder is called. 
+
+The abstract class contains - 
+
+* scalars - a list of strings that indicate scalar values in GraphQL
+* fields - a list of type ```QueryBuilder``` representing fields in GraphQL that may contain subfields, scalars, and connections
+ * connections - a list of type ```QueryBuilder``` representing connections in GraphQL
+
+Additionally, ```QueryBuilder``` also defines a method called ```construct()``` that iterates through the above three lists and constructs the query string. For fields and connections, it recursively calls the ```construct()``` method since they may have subfields, scalars, and connections themselves.
+
+Any class that extends ```QueryBuilder``` must provide functions that add to any of the three lists. For example, for a repository query we have a class called [```RepositoryQueryBuilder```](src/main/scala/builders/queryBuilders/RepositoryQueryBuilder.scala) that has functions to compose the body of the query. It has a function called ```includeName()``` which adds the scalar value ```"name"``` to the list of scalars. It also has a function called ```includeLanguages()``` that takes a [```LanguageQueryBuilder```](src/main/scala/builders/queryBuilders/LanguageQueryBuilder.scala) instance along with a [```PaginationValue```](src/main/scala/builders/PaginationValue.scala) instance that includes the ```"languages"``` connection to the connections list. The ```LanguageQueryBuilder``` instance provides methods to define the body of a language query and also extends the ```QueryBuilder``` abstract class so it can recursively call its ```construct()``` method. All the query builders except ```SearchQueryBuilder``` work in this pattern. We have implemented query builders for seven different kinds of GraphQL objects - 
+
+![query-builders](readme-resources/query-builders.png)
+
+##### SearchQueryBuilder
+
+The ```SearchQueryBuilder``` is slightly different from the rest of the query builders because we need to construct two different kinds of queries - 
+
+* the __query argument__ that provides filters to assist in the search of repositories
+* the __query body__ which is the body of the search query that may specify and subfields, scalars or connections
+
+Hence, it does not extend ```QueryBuilder```. But we still have a ```construct()``` function to build the above strings.
+
+Here, we constrain our search to repositories, so the ```type``` argument of the search query is permanently set to ```REPOSITORY```. We also provide an argument in the constructor called ```numberOfResults``` of type ```PaginationValue``` that specifies the number of results returned from the search. Additionally, there is also an argument called ```after``` in the constructor that is empty by default and can be set to return results after an ```endCursor```.
+
+Most of the functions deal with constructing filters in the __query argument__. For example, the ```setSearchTerms()``` which takes a variable number of String arguments to set as search terms in the query argument. The ```setLanguages()``` function takes a variable number of String arguments representing languages to filter the search by language. 
+
+There is only one function that deals with constructing the __query body__, which is the ```includeRepository()``` function that takes a ```RepositoryQueryBuilder``` instance as an argument. This instance  can be used to specify the sub-fields in the repository query body and gets included in the connections list, which is iterated by the ```construct()``` function. 
+
+##### PaginationValue
+
+```PaginationValue``` represents the number of results to be returned. It is a trait that is implemented by two case classes - ```First``` and ```Last```. Each case class takes an integer as a parameter that specifies the number of results to return either from the first or from the last. The functions that query connections inside a ```QueryBuilder``` sub-type all require a ```PaginationValue``` parameter. The ```SearchQueryBuilder``` also requires a ```PaginationValue``` parameter to specify the number of returned results.
+
+##### Operation
+
+For building the __query argument__ in ```SearchQueryBuilder```, some of the functions take an [```Operation```](src/main/scala/builders/Operation.scala) parameter. These represent comparison operations such as ```LessThan```, ```GreaterThan``` and ```Between```. All the ```Operation``` sub-types take integer parameters as operands for the respective operation. Some of the functions that take ```Operation``` argument involve filtering by number of stars, or number of followers, which can be found in ```SearchQueryBuilder```.
+
+#### HTTP Client
+
+The query built from the query builder component is encapsualted in an instance of the ```Query``` class that has a ```queryString``` along with it's getter.  This ```Query``` object is then sent to the HTTP client component returning the response from the API. 
+
+![http-client](readme-resources/http-client.png)
+
+A [```HttpClient```](src/main/scala/client/HttpClient.scala) object is built using a [```HttpClientBuilder```](src/main/scala/client/HttpClientBuilder.scala). The ```HttpClientBuilder``` class is a class with a phantom type ```T```. A type alias called ```HttpCall``` is set as the implicit parameter of the ```build()``` function. This implicit parameter can be satisfied only by calling the ```addBearer()``` function first, so figuratively speaking, the code will not compile unless the user provides an access token through the ```addBearer()``` function. To set the starting point for the mix-ins, we provide ```HttpEmpty``` as a type parameter when instantiating an object of type ```HttpClientBuilder```.
+
+The ```build()``` function internally tests a sample query with the provided access token and returns an ```Option[HttpClient]``` object. This is ```None``` if the user has not provided the correct user token. This ```Option[HttpClient]``` is then flat-mapped into it's ```executeQuery()``` function which accepts a ```Query``` object as the argument. 
+
+##### Serializer
+
+The ```executeQuery()``` function first extracts the query string from the ```Query``` object and then converts it to a JSON object using the [_Gson_](https://github.com/google/gson) library. The converted JSON object is then serialized using Gson and sent with a HTTP post call to the GitHub API.
+
+##### Deserializer
+
+```executeQuery()``` also deserializes the JSON response into the appropriate Scala classes. It does so with the help of a _type parameter_ and _reflection_. 
+
+Since we cannot determine the return of the query at compile time (it may be a search query or a repository query), we initially tried to return the super-type of ```Repository``` and ```Search```. But returning the super-type causes _object-slicing_  causing the loss of functions specific to either of the Scala classes. So instead, we push the responsibility of specifying the return type of the ```executeQuery()``` function onto the user who needs to provide the expected return type as a type parameter to the function. The function then uses reflection to verify the runtime type of return result with the type provided as a parameter to return a ```Some``` or ```None```. 
+
+The deserializing takes place using the [_Jackson_](https://github.com/FasterXML/jackson-module-scala) module which takes a JSON response and a destination type and returns an object of the destination type with values filled from the JSON. The destination types are provided by the Scala models defined to represent the GraphQL objects.
+
+#### Scala Models
+
+To retrieve information from the API reponse and store it in Scala classes, we need to first create the Scala classes equivalent to the GraphQL objects. These are the __Scala models__.
+
+We currently support the following GraphQL objects in our framework.
+
+![graphql-objects](readme-resources/graphql-objects.png)
+
+* The response to a query built using the ```findRepository()``` function needs to be put into a ```Repository``` object. This is specified in the type parameter for the ```executeQuery()``` function
+* The response to a query built using the ```searchRepositories()``` function needs to be put into a ```Search``` object. This is specified in the type parameter for the ```executeQuery()``` function
+* Each model has getters for each of it's fields
+
+We also support the following connections. 
+
+![graphql-connections](readme-resources/graphql-connections.png)
+
+Naturally, the query builders can only query the information that is supported in these Scala models. Even if a field not supported in the models is queried, the response for that field would be lost because there is not corresponding receiver.
+
+### Results
+
+We first read from ```application.conf``` - 
+
 ```scala
-val BASE_GHQL_URL = "https://api.github.com/graphql"
-val temp="{viewer {email login url}}"
-implicit val formats = DefaultFormats
+val config:Config = getConfigDetails("application.conf")
+```
+ 
+To create a ```HttpClient``` object, we instantiate using the ```HttpClientBuilder``` - 
 
-val client = HttpClientBuilder.create.build
-val httpUriRequest = new HttpPost(BASE_GHQL_URL)
-httpUriRequest.addHeader("Authorization", "Bearer d6150dbc62ccafe310080e1b37babe13f46dbbbc")
-httpUriRequest.addHeader("Accept", "application/json")
-val gqlReq = new StringEntity("{\"query\":\"" + temp + "\"}" )
-httpUriRequest.setEntity(gqlReq)
+```scala
+val httpObject:Option[HttpClient] = new HttpClientBuilder[HttpEmpty]()
+  .addBearerToken(
+    config.getString("ACCESS_TOKEN")
+  )
+  .build
+```
 
-val response = client.execute(httpUriRequest)
-System.out.println("Response:" + response)
-response.getEntity match {
-    case null => System.out.println("Response entity is null")
-    case x if x != null => {
-      val respJson = fromInputStream(x.getContent).getLines.mkString
-      System.out.println(respJson)
-      val viewer = parse(respJson).extract[Data]
-      System.out.println(viewer)
-      System.out.println(write(viewer))
-  }
+A sample GraphQL repository query looks like this - 
+
+```json 
+{ 
+  repository(name:"incubator-mxnet", owner:"apache") { 
+    url 
+    forks(first:10) { 
+      nodes {
+        name
+        isFork
+        url 
+      } 
+    } 
+  } 
 }
 ```
 
-In your course project you will create an extensible framework with typed GraphQL commands that the clients will execute using such monadic combinators as **flatMap**, **Option**, and **Future** among the others. Each GraphQL external command type will be implemented using the pattern [Builder](https://en.wikipedia.org/wiki/Builder_pattern). Additional 1% bonus will be given if you implement this pattern using [phantom types](https://medium.com/@maximilianofelice/builder-pattern-in-scala-with-phantom-types-3e29a167e863). Here is a general outline for the code that a programmer will write to execute external commands using your framework.
+The Scala equivalent with our builders looks like this - 
+
 ```scala
-val gitHubObject:Option[GHQLRespone] = (new Github).Builder().setAuthorization(BEARER,GetAuthCodeFromConfig()).setHeader(ACCEPT, APPJSON).build()
-val result = gitHubObject.flatMap((new QueryCommand()).setRepo(ALLREPOS).setLanguages(List(JAVA, SCALA)).setCommits(_>200).build()).filter((new Stars(_>10))).filter(Contributors(_>10)).flatMap(PullCommits(Last(10)))
+val query:Query = new Query()
+  .findRepository(
+    "incubator-mxnet",
+    "apache",
+    new RepositoryQueryBuilder()
+      .includeUrl()
+      .includeForks(
+        new RepositoryQueryBuilder()
+          .includeUrl()
+          .includeIsFork()
+          .includeName(), 
+        new First(10)
+      )
+  )
 ```
-You see how clean the code is and we use the Scala compiler to type check it to ensure that mistakes are not made unlike typing string literals in the code where we can easily make a typo mistake and the program will crash or return an exception or incorrect results. Also, this code is clean and compact, it is easy to read, it is not cluttered with extemporaneously introduced variables like gqlReq. All error and exception handling is buried inside your framework. Your client programmers know your commands and how to compose them. Low level API calls that deal with network data transfer and data constructions and parsing are buried in your framework.
+To send the ```Query``` object to the API, use the ```HttpClient``` object - 
 
-As you can see, your work can be broken down in the following three phases. In the first phase, you will select what subset of GraphQL commands you choose to support and how you will design the type system to hide the complexity of constructing these commands with proper command line parameters and the external use values (e.g., an authentication token). Keep in mind that your design must provide sufficient information hiding and allow programmers to extend it at the same time (i.e., you may consider the use of sealed traits). Executing each command results in data, so you will design data parsers for specific commands in which you will embed the information of how the resulting data is structured. For example, the execution of the command query may result in the following response.
+```scala
+val result  = httpObject.flatMap(_.executeQuery[Repository](query))
 ```
-{                                               
-  "data": {                                     
-    "googleRepo": {                             
-      "name": "WebFundamentals",                
-      "owner": {                                
-        "id": "MDEyOk9yZ2FuaXphdGlvbjEzNDIwMDQ="
-      }                                         
-    },                                          
-    "facebookRepo": {                           
-      "name": "react",                          
-      "owner": {                                
-        "id": "MDEyOk9yZ2FuaXphdGlvbjY5NjMx"    
-      }                                         
-    }                                           
-  }                                             
-}                                               
+
+As you can see above, the return type has been explicitely cast to ```Repository```.
+
+To extract the forks information from the returned result - 
+
+```scala
+println(result.map(_.forks.nodes).getOrElse("None"))
+
+Output:
+List(Repository(mxnet,null,https://github.com/winstywang/mxnet,null,true,null,null,null,null), Repository(mxnet,null,https://github.com/zjucsxxd/mxnet,null,true,null,null,null,null), Repository(mxnet,null,https://github.com/ltheone/mxnet,null,true,null,null,null,null), Repository(mxnet,null,https://github.com/Poneyo/mxnet,null,true,null,null,null,null), Repository(mxnet,null,https://github.com/thirdwing/mxnet,null,true,null,null,null,null), Repository(mxnet,null,https://github.com/tqchen/mxnet,null,true,null,null,null,null), Repository(mxnet,null,https://github.com/TangXing/mxnet,null,true,null,null,null,null), Repository(mxnet,null,https://github.com/neuroidss/mxnet,null,true,null,null,null,null), Repository(mxnet,null,https://github.com/wavelets/mxnet,null,true,null,null,null,null), Repository(mxnet,null,https://github.com/surfcao/mxnet,null,true,null,null,null,null))
 ```
-It would be unreasonable to expose the user of your framework to this table data. You will provide combinators like `filter(_.equalTo(RepoName()) && _.equalTo(OwnerId()))` that will return the projection of the table, specifically the results of the name of the repo and the owner id. Thus, the knowledge of the resulting data structure/format will be encapsulated in the command that you design and implement.
 
-In the second phase, you will create your underlying implementation of the actual GraphQL command executor and data retriever that will be buried in your framework, i.e., the user of your framework will not be exposed to the complexities of the actual interactions with GraphQL commands and raw JSON response data. Finally, in the third phase of the course project, you will test your framework and you will create examples and documentation for your users that will be included in your submission along with the design document that describes a model of your GraphQL command execution, its constraints and rules, your design of the classes, traits, and monadic combinators. Of course, your document should start with example program(s) that you write that use your framework, which also serve as the test cases that verify its behavior.
+To get url of each of the forks from the results - 
 
-## Baseline Submission
-Your baseline project submission should include your application design with a conceptual explanation in the document or in the comments in the source code of the architecture and design choices that you made, and the documentation that describe the build, deployment and the runtime, to be considered for grading. Your project submission should include all your source code as well as non-code artifacts (e.g., resource files if applicable), your project should be buildable using SBT. Simply copying some instrumentation examples from open-source projects and modifying them a bit will result in desk-rejecting your submission.
+```scala
+println(result.map(_.forks.nodes.map(_.getUrl)).getOrElse("None"))
 
-## Piazza collaboration
-You can post questions and replies, statements, comments, discussion, etc. on Piazza. For this homework, feel free to share your ideas, mistakes, code fragments, commands from scripts, and some of your technical solutions with the rest of the class, and you can ask and advise others using Piazza on where resources and sample programs can be found on the internet, how to resolve dependencies and configuration issues. When posting question and answers on Piazza, please select the appropriate folder, i.e., courseproject to ensure that all discussion threads can be easily located. Active participants and problem solvers will receive bonuses from the big brother :-) who is watching your exchanges on Piazza (i.e., your class instructor). However, *you must not post your dockerfile or your source code!*
+Output:
+List(https://github.com/winstywang/mxnet, https://github.com/zjucsxxd/mxnet, https://github.com/ltheone/mxnet, https://github.com/Poneyo/mxnet, https://github.com/thirdwing/mxnet, https://github.com/tqchen/mxnet, https://github.com/TangXing/mxnet, https://github.com/neuroidss/mxnet, https://github.com/wavelets/mxnet, https://github.com/surfcao/mxnet)
+```
 
-## Git logistics
-**This is a group project,** with at least one and at most five members allowed in a group. Each student can participate in at most one group; enrolling in more than one group will result in the grade zero. Each group will select a group leader who will create a private fork and will invite the other group classmates with the write access to that fork repo. Each submission will include the names of all groupmates in the README.md and all groupmates will receive the same grade for this course project submission. Group leaders with successful submissions and good quality work will receive an additional 2% bonus for their management skills - it applied only to groups with two or more members. Please read the syllabus for the advice on how to select your team members.
+A search query in GraphQL looks like this - 
 
-If you submitted your previous homework(s), it means that you were already added as a member of CS474_Spring2020 team in Bitbucket and you will see the course project repo. You will fork this repository and your fork will be private, no one else besides you, your forkmates, the TA and your course instructor will have access to your fork. Please remember to grant a read (or write) access to your repository to your TA and your instructor and write access to your forkmates. You can commit and push your code as many times as you want. Your code will not be visible and it should not be visible to other students except for your forkmates, of course. When you push your project, your instructor and the TA will see you code in your separate private fork. Making your fork public or inviting other students except for your forkmates to join your fork before the submission deadline will result in losing your grade. For grading, only the latest push timed before the deadline will be considered. **If you push after the deadline, your grade for the homework will be zero**. For more information about using the Git and Bitbucket specifically, please use this [link as the starting point](https://confluence.atlassian.com/bitbucket/bitbucket-cloud-documentation-home-221448814.html). For those of you who struggle with the Git, I recommend a book by Ryan Hodson on Ry's Git Tutorial. The other book called Pro Git is written by Scott Chacon and Ben Straub and published by Apress and it is [freely available](https://git-scm.com/book/en/v2/). There are multiple videos on youtube that go into details of the Git organization and use.
+```json
+{ 
+  search(query: " language:java,javascript,html, ai ml in:name,readme, stars:>5 forks:<=10", type:REPOSITORY, first:10) { 
+    nodes { 
+      ... on Repository { 
+        createdAt 
+        url 
+        name 
+      } 
+    } 
+    pageInfo 
+    { 
+      endCursor 
+    } 
+  } 
+}
+```
 
-Please follow this naming convention while submitting your work : "Firstname_Lastname_project" without quotes, where the group leader will specify her/his first and last names **exactly as the group leader is registered with the University system**, so that we can easily recognize your submission. I repeat, make sure that you will give both your TA and the course instructor the read access to your *private forked repository*.
+The Scala equivalent with our builders looks like this - 
 
-## Discussions and submission
-You can post questions and replies, statements, comments, discussion, etc. on Piazza. Remember that you cannot share your code and your solutions privately, but you can ask and advise others using Piazza and StackOverflow or some other developer networks where resources and sample programs can be found on the Internet, how to resolve dependencies and configuration issues. Yet, your implementation should be your own and you cannot share it. Alternatively, you cannot copy and paste someone else's implementation and put your name on it. Your submissions will be checked for plagiarism. **Copying code from your classmates or from some sites on the Internet will result in severe academic penalties up to the termination of your enrollment in the University**. When posting question and answers on Piazza, please select the appropriate folder, i.e., **course project** to ensure that all discussion threads can be easily located.
+```scala
+val query:Query = new Query().
+  searchRepositories(
+    new SearchQueryBuilder(
+      new First(number = 10)
+    )
+      .includeRepository(
+        new RepositoryQueryBuilder()
+          .includeName()
+          .includeUrl()
+          .includeDateTime()
+      )
+      .setLanguages("java","javascript","html")
+      .setSearchTerms("ai","ml")
+      .setSearchInContent(SearchQueryBuilder.NAME,SearchQueryBuilder.README)
+      .setNumberOfStars(new GreaterThan(5))
+      .setNumberOfForks(new LesserThanEqualTo(10))
+  )
+```
 
+To send the ```Query``` object to the API, use the ```HttpClient``` object - 
 
-## Submission deadline and logistics
-Wednesday, May 6, 2020 at 9:00PM via the bitbucket repository. Your submission will include the source code, your documentation with instructions and detailed explanations on how to assemble and deploy your program both in IntelliJ and CLI SBT, and a document that explains how you built and deployed your program and what your experiences are with instrumenting open-source Java programs, and the limitations of your implementation. Again, do not forget, please make sure that you will give both your TA and your instructor the read access to your private forked repository. Your name should be shown in your README.md file and other documents. Your code should compile and run from the command line using the commands like ```sbt clean compile test``` and from the docker image. Naturally, you project should be IntelliJ friendly, i.e., your graders should be able to import your code into IntelliJ and run from there. Use .gitignore to exlude files that should not be pushed into the repo.
+```scala
+val result  = httpObject.flatMap(_.executeQuery[Search](query))
+```
 
-## Evaluation criteria
-- the maximum grade for this course project is 25% with the bonus up to 1% for being the group leader for a group with more than two members. Points are subtracted from this maximum grade: for example, saying that 2% is lost if some requirement is not completed means that the resulting grade will be 25%-2% => 23%; if the core functionality does not work, no bonus points will be given;
-- the code does not work in that it does not produce a correct output or crashes: up to 25% lost;
-- insufficient comments in your code: up to 15% lost;
-- insufficient tests in your codebase: up to 15% lost;
-- not having tests that test the functionality of your command implementations: up to 25% lost;
-- missing essential comments and explanations from the source code that you wrote: up to 20% lost;
-- your Scala code is simply a version of imperative Java code with many mutable variables exposed to your clients: up to 15% lost;
-- your code does not have sufficient comments or your accompanying documents do not contain a description of how you designed and implemented the instrumenter: up to 20% lost;
-- the documentation exists but it is insufficient to understand : up to 20% lost;
-- the minimum grade for this course project cannot be less than zero.
+As you can see above, the return type has been explicitely cast to ```Search```.
 
-That's it, folks!
+To extract repository URLs from the search result - 
+
+```scala
+println(result.map(_.nodes.map(_.getUrl)).getOrElse("None"))
+
+Output:
+List(https://github.com/fritzlabs/handwriting-detector-app, https://github.com/bentorfs/AI-algorithms, https://github.com/kylecorry31/ML4K-AI-Extension, https://github.com/intrepidkarthi/MLmobileapps, https://github.com/zoho-labs/Explainer, https://github.com/gnani-ai/API-service, https://github.com/rayleighko/training2018, https://github.com/refactoring-ai/predicting-refactoring-ml, https://github.com/onnx4j/onnx4j, https://github.com/hakmesyo/open-cezeri-library)
+```
+
+To extract repository names from the search result - 
+
+```scala
+println(result.map(_.nodes.map(_.getRepositoryName)).getOrElse("None"))
+
+Output:
+List(handwriting-detector-app, AI-algorithms, ML4K-AI-Extension, MLmobileapps, Explainer, API-service, training2018, predicting-refactoring-ml, onnx4j, open-cezeri-library)
+```
+
+### Class reference
+
+The generated Scaladoc can be used as API documentation for instructions on how to build different kinds of queries. We have implemented seven query builders to query seven different kinds of GraphQL objects under the ```findRepository()``` function. The below are the links to the specific classes.
+
+* [```RepositoryQueryBuilder```](src/main/scala/builders/queryBuilders/RepositoryQueryBuilder.scala)
+* [```UserQueryBuilder```](src/main/scala/builders/queryBuilders/UserQueryBuilder.scala)
+* [```IssueQueryBuilder```](src/main/scala/builders/queryBuilders/IssueQueryBuilder.scala)
+* [```LanguageQueryBuilder```](src/main/scala/builders/queryBuilders/LanguageQueryBuilder.scala)
+* [```RepositoryTopicQueryBuilder```](src/main/scala/builders/queryBuilders/RepositoryTopicQueryBuilder.scala)
+* [```TopicQueryBuilder```](src/main/scala/builders/queryBuilders/TopicQueryBuilder.scala)
+* [```RepositoryOwnerQueryBuilder```](src/main/scala/builders/queryBuilders/RepositoryOwnerQueryBuilder.scala)
+
+For searching across all the repositories, the [```SearchQueryBuilder```](src/main/scala/builders/SearchQueryBuilder.scala) has been provided.
