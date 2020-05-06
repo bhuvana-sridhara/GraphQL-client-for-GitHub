@@ -18,5 +18,12 @@ libraryDependencies ++= Seq(
   // https://mvnrepository.com/artifact/com.fasterxml.jackson.module/jackson-module-scala
   "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.11.0",
   // https://mvnrepository.com/artifact/org.scala-lang/scala-reflect
-  "org.scala-lang" % "scala-reflect" % "2.13.2"
+  "org.scala-lang" % "scala-reflect" % "2.13.2",
+  // https://mvnrepository.com/artifact/org.scalatest/scalatest
+  "org.scalatest" %% "scalatest" % "3.1.1" % Test,
+  // https://mvnrepository.com/artifact/com.typesafe/config
+  "com.typesafe" % "config" % "1.3.4"
+
+
+
 )

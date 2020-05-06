@@ -12,8 +12,8 @@ class JacksonJsonDeserializer(val mapper: ObjectMapper with ScalaObjectMapper) e
 
   /**
    *
-   * @param json
-   * @tparam T the scala case class that is passed to which the json string is deserialized
+   * @param json String in JSON format
+   * @tparam T the scala case class that is passed to which the json string is deserialize
    * @return The object of the case class to which the json parts are mapped
    */
   override def deserialize[T:Manifest](json: String): T = {
@@ -21,8 +21,17 @@ class JacksonJsonDeserializer(val mapper: ObjectMapper with ScalaObjectMapper) e
   }
 }
 
+/**
+ * Object Mapper details and properties are tagged to the JacksonJsonDeserializer class using
+ * the Companion Object.DefaultScala Module is mapped with the deserializer.It is Singleton so the
+ * its members can be accessed directly.
+ */
 object JacksonJsonDeserializer{
 
+  /**
+   * The build function is used to create an instance of JacksonJsonDeserializer.
+   * @return Instance of JacksonJsonDeserializer
+   */
   def build:JacksonJsonDeserializer={
     val mapper = new ObjectMapper() with ScalaObjectMapper
     mapper.registerModule(DefaultScalaModule)

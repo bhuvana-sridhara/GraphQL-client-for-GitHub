@@ -1,5 +1,7 @@
 package client.json
 
+import models.objects.GraphQLObject
+
 import scala.reflect.ClassTag
 
 /**
@@ -11,8 +13,8 @@ trait JsonDeserializer {
 
   /**
    *
-   * @param json
-   * @tparam T the scala case class that is passed to which the json string is deserialized
+   * @param json String in Json format
+   * @tparam T the scala case class that is passed to which the json string is deserialize
    * @return The object of the case class to which the json parts are mapped
    */
   def deserialize[T:Manifest](json:String):T
