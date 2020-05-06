@@ -1,5 +1,6 @@
 package client
 import com.typesafe.config.Config
+import com.typesafe.scalalogging.LazyLogging
 import scalaj.http.Http
 import utils.ConfigReader.getConfigDetails
 
@@ -9,7 +10,7 @@ import utils.ConfigReader.getConfigDetails
  * @tparam T contains Phantom Types for some or all the  components used in the building the HTTP Call.(via mixin)
  *                        The type parameter determines if the all the components exists in the HTTP call.
  */
-class HttpClientBuilder[T <: HttpClientBuilder.HttpComponents](parts: Map[String, String] = Map(("Content-Type" -> "application/json"), ("Accept" -> "application/json"))) {
+class HttpClientBuilder[T <: HttpClientBuilder.HttpComponents](parts: Map[String, String] = Map(("Content-Type" -> "application/json"), ("Accept" -> "application/json"))) extends LazyLogging {
 
   import HttpClientBuilder.HttpComponents._
 
@@ -35,9 +36,12 @@ class HttpClientBuilder[T <: HttpClientBuilder.HttpComponents](parts: Map[String
         parts
       ).postData("").asString.code
     response match {
-      case 200 => Some(HttpClient(parts))
+      case 200 => {
+        logger.info("Http Client built Successfully!!!")
+        Some(HttpClient(parts))
+      }
       case _ => {
-        println("Please provide a proper Token!!!")
+        logger.error("Token invalid.Please provide proper token!!!")
         None
       }
     }

@@ -8,6 +8,7 @@ import models.objects.{GraphQLObject, Repository, Search, User}
 import scala.reflect.runtime.universe._
 import utils.ConfigReader.getConfigDetails
 import com.typesafe.config._
+import com.typesafe.scalalogging.LazyLogging
 
 /**
  * The class defines a method that handles http call to the GraphQL server and handles the query output
@@ -16,7 +17,7 @@ import com.typesafe.config._
  * case classes using [[client.json.JacksonJsonDeserializer]]
  * @param headerPart the http header for the call body
  */
-case class HttpClient(headerPart:Map[String,String]= Map()){
+case class HttpClient(headerPart:Map[String,String]= Map()) extends LazyLogging{
 
   /**
    *The functions handles the http api call to the Graphql api server and handles the mapping to modeled scala
@@ -44,25 +45,25 @@ case class HttpClient(headerPart:Map[String,String]= Map()){
         case "repository" => if(b.tpe.toString == "models.objects.Repository"){
           Some(JacksonJsonDeserializer.build.deserialize[Repository](jsonString).asInstanceOf[T])
         }else{
-          println("Please provide Repository Type for Casting since the query created is of type Repository")
+          logger.error("Casting Error!!!Please provide Repository Type for Casting since the query created is of type Repository")
           None
         }
         case "user" => if(b.tpe.toString == "models.objects.User"){
           Some(JacksonJsonDeserializer.build.deserialize[User](jsonString).asInstanceOf[T])
         }else{
-          println("Please provide User Type for Casting since the query created is of type User")
+          logger.error("Casting Error!!!Please provide User Type for Casting since the query created is of type User")
           None
         }
         case "search" => if(b.tpe.toString == "models.objects.Search"){
           Some(JacksonJsonDeserializer.build.deserialize[Search](jsonString).asInstanceOf[T])
         }else{
-          println("Please provide Search Type for Casting since the query created is of type Search")
+          logger.error("Casting Error!!!Please provide Search Type for Casting since the query created is of type Search")
           None
         }
       }
     }
     else{
-      println("Build Query in the proper Format")
+      logger.error("Query built in wrong format.Build Query in the proper Format!!!")
       None
     }
   }

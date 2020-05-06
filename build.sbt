@@ -22,7 +22,13 @@ libraryDependencies ++= Seq(
   // https://mvnrepository.com/artifact/org.scalatest/scalatest
   "org.scalatest" %% "scalatest" % "3.1.1" % Test,
   // https://mvnrepository.com/artifact/com.typesafe/config
-  "com.typesafe" % "config" % "1.3.4"
+  "com.typesafe" % "config" % "1.3.4",
+  // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
+  "ch.qos.logback" % "logback-classic" % "1.2.3" % Test,
+  // https://mvnrepository.com/artifact/com.typesafe.scala-logging/scala-logging
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2",
+  "org.slf4j" % "slf4j-api" % "1.7.5",
+  "org.slf4j" % "slf4j-simple" % "1.7.5"
 
 
 
