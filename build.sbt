@@ -22,7 +22,7 @@ libraryDependencies ++= Seq(
   // https://mvnrepository.com/artifact/org.scalatest/scalatest
   "org.scalatest" %% "scalatest" % "3.1.1" % Test,
   // https://mvnrepository.com/artifact/com.typesafe/config
-  "com.typesafe" % "config" % "1.3.4",
+  "com.typesafe" % "config" % "1.3.4"
 
 
 
