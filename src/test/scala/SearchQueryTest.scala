@@ -35,6 +35,8 @@ class SearchQueryTest extends AnyFunSuite{
 
     //check with corresponding sample hit response
     assert(result.nonEmpty)
+
+    print(result.map(_.nodes.map(_.getRepositoryName)).getOrElse("None").getClass)
     assert(result.head.nodes.head.getRepositoryName.toLowerCase.contains("ai"))
   }
 
@@ -58,5 +60,4 @@ class SearchQueryTest extends AnyFunSuite{
     assert(result.isEmpty)
     assert(result.toString.contains("None"))
   }
-
 }
