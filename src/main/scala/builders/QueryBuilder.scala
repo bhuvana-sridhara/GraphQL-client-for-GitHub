@@ -1,5 +1,7 @@
 package builders
 
+import com.typesafe.scalalogging.LazyLogging
+
 /**
  * Defines behaviour for building any type of a query string. Contains three lists -
  *    - scalars - list of strings that represent a scalar in GraphQL
@@ -17,7 +19,7 @@ package builders
  *    - [[builders.queryBuilders.RepositoryTopicQueryBuilder]]
  *    - [[builders.queryBuilders.TopicQueryBuilder]]
  */
-abstract class QueryBuilder {
+abstract class QueryBuilder extends LazyLogging {
 
   // the three lists
   def scalars: List[String]
@@ -30,6 +32,7 @@ abstract class QueryBuilder {
   // recursive function to construct the query string
   def construct(): String = {
 
+    logger.info("Constructing")
     var returnString: String = topQuery + " {"
 
     // iterate through scalars

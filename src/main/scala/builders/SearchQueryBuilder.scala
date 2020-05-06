@@ -1,6 +1,7 @@
 package builders
 
 import builders.queryBuilders.RepositoryQueryBuilder
+import com.typesafe.scalalogging.LazyLogging
 
 /**
  * Defines a query builder for builder query string for a search query on repositories.
@@ -20,7 +21,7 @@ case class SearchQueryBuilder(
                                connections: List[QueryBuilder] = List(),
                                queryString: String = "",
                                after: String = ""
-                             ) {
+                             ) extends LazyLogging {
 
   // type argument of a search query
   private var typeString: String = "type:REPOSITORY"
@@ -36,6 +37,7 @@ case class SearchQueryBuilder(
    */
   def construct(): String = {
 
+    logger.info("Constructing")
     // append arguments of the search query
     var returnString: String =
       s"""search(query: \"$queryString\", $typeString, ${numberOfResults.argument}"""
@@ -66,6 +68,7 @@ case class SearchQueryBuilder(
    * @return object of type [[SearchQueryBuilder]]
    */
   def setSearchTerms(terms: String*): SearchQueryBuilder = {
+    logger.info("Setting search terms")
     var newString: String = this.queryString
     for (term <- terms) {
       newString = newString + " " + term
@@ -88,6 +91,7 @@ case class SearchQueryBuilder(
    * @return object of type [[SearchQueryBuilder]]
    */
   def setSearchInContent(contents: SearchQueryBuilder.Content*): SearchQueryBuilder = {
+    logger.info("Setting search content")
     var newString = this.queryString + " in:"
     for (content <- contents) {
       newString = newString + content + ","
@@ -108,6 +112,7 @@ case class SearchQueryBuilder(
    * @return object of type [[SearchQueryBuilder]]
    */
   def setSearchInUser(userName: String): SearchQueryBuilder = {
+    logger.info("Setting search in user")
     var newString = this.queryString + s" user:$userName"
     new SearchQueryBuilder(
       this.numberOfResults,
@@ -125,6 +130,7 @@ case class SearchQueryBuilder(
    * @return object of type [[SearchQueryBuilder]]
    */
   def setSearchInOrg(orgName: String): SearchQueryBuilder = {
+    logger.info("Setting search in org")
     var newString = this.queryString + s" org:$orgName"
     new SearchQueryBuilder(
       this.numberOfResults,
@@ -142,6 +148,7 @@ case class SearchQueryBuilder(
    * @return object of type [[SearchQueryBuilder]]
    */
   def setNumberOfFollowers(operation: Operation): SearchQueryBuilder = {
+    logger.info("Setting number of followers")
     var newString = this.queryString + s" followers:${operation.argument}"
     new SearchQueryBuilder(
       this.numberOfResults,
@@ -159,6 +166,7 @@ case class SearchQueryBuilder(
    * @return object of type [[SearchQueryBuilder]]
    */
   def setNumberOfForks(operation: Operation): SearchQueryBuilder = {
+    logger.info("Setting number of forks")
     var newString = this.queryString + s" forks:${operation.argument}"
     new SearchQueryBuilder(
       this.numberOfResults,
@@ -176,6 +184,7 @@ case class SearchQueryBuilder(
    * @return object of type [[SearchQueryBuilder]]
    */
   def setNumberOfStars(operation: Operation): SearchQueryBuilder = {
+    logger.info("Setting number of stars")
     var newString = this.queryString + s" stars:${operation.argument}"
     new SearchQueryBuilder(
       this.numberOfResults,
@@ -193,6 +202,7 @@ case class SearchQueryBuilder(
    * @return object of type [[SearchQueryBuilder]]
    */
   def setLanguages(languages: String*): SearchQueryBuilder = {
+    logger.info("Setting languages")
     var newString = this.queryString + " language:"
     for (language <- languages) {
       newString = newString + language + ","
@@ -213,6 +223,7 @@ case class SearchQueryBuilder(
    * @return object of type [[SearchQueryBuilder]]
    */
   def setTopic(topic: String): SearchQueryBuilder = {
+    logger.info("Setting topic")
     var newString = this.queryString + s" topic:$topic"
     new SearchQueryBuilder(
       this.numberOfResults,
@@ -230,6 +241,7 @@ case class SearchQueryBuilder(
    * @return object of type [[SearchQueryBuilder]]
    */
   def setNumberOfTopics(operation: Operation): SearchQueryBuilder = {
+    logger.info("Setting number of topics")
     var newString = this.queryString + s" topics:${operation.argument}"
     new SearchQueryBuilder(
       this.numberOfResults,
@@ -248,6 +260,7 @@ case class SearchQueryBuilder(
    * @return object of type [[SearchQueryBuilder]]
    */
   def setPublicOrPrivate(access: SearchQueryBuilder.Access): SearchQueryBuilder = {
+    logger.info("Setting public or private")
     var newString = this.queryString + s" is:$access"
     new SearchQueryBuilder(
       this.numberOfResults,
@@ -266,6 +279,7 @@ case class SearchQueryBuilder(
    * @return object of type [[SearchQueryBuilder]]
    */
   def includeRepository(repositoryQueryBuilder: RepositoryQueryBuilder): SearchQueryBuilder = {
+    logger.info("Including repository connection")
     repositoryQueryBuilder.topQuery = "... on Repository"
     val searchQueryBuilder = new SearchQueryBuilder(
       this.numberOfResults,

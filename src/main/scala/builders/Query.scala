@@ -1,7 +1,7 @@
 package builders
 
 import builders.queryBuilders.RepositoryQueryBuilder
-
+import com.typesafe.scalalogging.LazyLogging
 /**
  * Returns a query object which has a query string that can be passed to
  * the GraphQL API. Contains functions to construct two different kinds of
@@ -10,7 +10,7 @@ import builders.queryBuilders.RepositoryQueryBuilder
  * @param queryString The query string to be sent to GraphQL excluding the
  *                    outer "query" tag
  */
-case class Query(queryString: String = "") {
+case class Query(queryString: String = "") extends LazyLogging {
 
   // contains a string describing the return expected by the underlying query
   var returnType: String = ""
@@ -37,6 +37,7 @@ case class Query(queryString: String = "") {
                       repositoryQueryBuilder: RepositoryQueryBuilder
                     ): Query = {
 
+    logger.info("Finding repository")
     // modify top query to include the required arguments
     repositoryQueryBuilder.topQuery = repositoryQueryBuilder.topQuery +
       s"""(name:\"$name\", owner:\"$owner\")"""
@@ -58,6 +59,8 @@ case class Query(queryString: String = "") {
    * @return object of type [[Query]]
    */
   def searchRepositories(searchQueryBuilder: SearchQueryBuilder): Query = {
+
+    logger.info("Searching repositories")
     val queryObject = new Query("{ " + searchQueryBuilder.construct() + " }")
 
     // set return string to indicate that this query object returns a search result
