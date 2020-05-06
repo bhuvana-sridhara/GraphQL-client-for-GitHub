@@ -2,7 +2,7 @@ import builders.queryBuilders.RepositoryQueryBuilder
 import builders.{First, Query}
 import client.HttpClientBuilder.HttpComponents.HttpEmpty
 import client.{HttpClient, HttpClientBuilder}
-import models.objects.Repository
+import models.objects.{Repository, Search}
 import org.scalatest.funsuite.AnyFunSuite
 
 class FindRepositoryQueryTest extends AnyFunSuite{
@@ -54,6 +54,33 @@ class FindRepositoryQueryTest extends AnyFunSuite{
       )
 
     val result  = httpObject.flatMap(_.executeQuery[Repository](query))
+
+    assert(result.isEmpty)
+    assert(result.toString.contains("None"))
+
+  }
+
+  test("Unsuccessful query- Please provide Repository Type for Casting since the query created is of type Repository"){
+    val httpObject:Option[HttpClient] = new HttpClientBuilder[HttpEmpty]()
+      .addBearerToken("173f9a32dfa62e35664a4f662e519c78f4101295")
+      .build
+
+    //Build query
+    val query:Query = new Query()
+      .findRepository("incubator-mxnet",
+        "apache",
+        new RepositoryQueryBuilder()
+          .includeUrl()
+          .includeForks(
+            new RepositoryQueryBuilder()
+              .includeUrl()
+              .includeIsFork()
+              .includeName(),
+            new First(10)
+          )
+      )
+
+    val result  = httpObject.flatMap(_.executeQuery[Search](query))
 
     assert(result.isEmpty)
     assert(result.toString.contains("None"))
